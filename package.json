@@ -1,0 +1,32 @@
+{
+  "name": "apiFoodie",
+  "version": "1.0.0",
+  "engines": {
+    "node": "19.3.0"
+  },
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "luxon": "^3.4.0",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.2",
+    "nodemon": "^2.0.20",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.28.0",
+    "sharp": "^0.31.3"
+  }
+}
