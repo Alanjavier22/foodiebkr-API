@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 import { error } from "../connection/error.js";
 
 //Constantes
-import clientes from "./clientes.js";
+import clientes from "./Clientes.js";
 import email from "./email.js";
 
 export default function (sentences) {
