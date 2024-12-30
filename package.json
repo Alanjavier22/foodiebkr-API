@@ -24,6 +24,7 @@
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.2",
     "nodemon": "^2.0.20",
+    "pdfmake": "^0.3.0-beta.14",
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.28.0",
