@@ -15,11 +15,11 @@ export default function (sentences) {
       usuario_ingreso: Number(id_rol) === 4 ? "Admin" : usuario_ingreso,
     };
 
-    return await sentences.insert("pastel", "auditoria", _data);
+    return await sentences.insert(pasteleria, "auditoria", _data);
   }
 
   async function consultar() {
-    const auditoria = await sentences.select("pastel", "auditoria", ["*"], {}, [
+    const auditoria = await sentences.select(pasteleria, "auditoria", ["*"], {}, [
       ["id_auditoria", "desc"],
     ]);
 

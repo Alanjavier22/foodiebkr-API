@@ -22,7 +22,7 @@ export default function (sentences) {
 
     if (id_venta) {
       await sentences.update(
-        "pastel",
+        pasteleria,
         "venta",
         {
           ...data,
@@ -32,7 +32,7 @@ export default function (sentences) {
         { id_venta }
       );
     } else {
-      await sentences.insert("pastel", "venta", {
+      await sentences.insert(pasteleria, "venta", {
         ...data,
         ip_ingreso,
         usuario_ingreso,
@@ -75,7 +75,7 @@ export default function (sentences) {
     }
 
     let ventas = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "venta",
       ["*"],
       { realizado_por, ...filtro },
@@ -161,7 +161,7 @@ export default function (sentences) {
   //#################----FUNCIONES PARA COTIZACIONES----#################
   async function insertFromCotizacion({ id_cotizacion }, token) {
     let cotizaciones = await sentences.select(
-      "pastel",
+      pasteleria,
       "cotizacion",
       ["*"],
       { id_cotizacion },
@@ -272,7 +272,7 @@ export default function (sentences) {
 
   async function actualizarEstados(token) {
     let ventas = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "venta",
       ["*"],
       { realizado_por: "Tienda" },

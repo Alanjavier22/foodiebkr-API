@@ -30,12 +30,12 @@ export default function (sentences) {
       delete data.id_producto;
 
       //UPDATE
-      await sentences.update("pastel", "inventario", _data, {
+      await sentences.update(pasteleria, "inventario", _data, {
         id_inventario,
       });
     } else {
       //INSERT
-      await sentences.insert("pastel", "inventario", _data);
+      await sentences.insert(pasteleria, "inventario", _data);
     }
 
     return await auditoria(sentences).insert(
@@ -84,7 +84,7 @@ export default function (sentences) {
     if (estado !== "all") filtro.estado_inventario = estado;
 
     const _inventario = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "inventario",
       ["*"],
       filtro,
@@ -132,7 +132,7 @@ export default function (sentences) {
 
   async function consultarDetalles({ id_inventario }) {
     const _inventario = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "inventario",
       ["*"],
       { id_inventario },
@@ -206,7 +206,7 @@ export default function (sentences) {
   async function actualizarStocks(items, token) {
     for (let item of items) {
       const [{ id_inventario = null, stock = 0 } = {}] = await sentences.select(
-        "pastel",
+        pasteleria,
         "inventario",
         ["id_inventario", "stock"],
         {
@@ -218,7 +218,7 @@ export default function (sentences) {
         const newStock = stock - item.quantity;
 
         await sentences.update(
-          "pastel",
+          pasteleria,
           "inventario",
           { stock: newStock, estado_inventario: newStock !== 0 },
           { id_inventario }

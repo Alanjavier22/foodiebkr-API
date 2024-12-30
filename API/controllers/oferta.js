@@ -22,16 +22,16 @@ export default function (sentences) {
     if (data.id_oferta) {
       const id_oferta = data.id_oferta;
       delete data.id_oferta;
-      await sentences.update("pastel", "oferta", data, { id_oferta });
+      await sentences.update(pasteleria, "oferta", data, { id_oferta });
     } else {
-      const ofertas = await sentences.select("pastel", "oferta", ["*"], {
+      const ofertas = await sentences.select(pasteleria, "oferta", ["*"], {
         codigo_descuento: data.codigo_descuento,
       });
 
       if (ofertas.length !== 0)
         throw new Error("Código de descuento ya registrado!", 201);
 
-      await sentences.insert("pastel", "oferta", data);
+      await sentences.insert(pasteleria, "oferta", data);
     }
 
     return await auditoria(sentences).insert(
@@ -49,7 +49,7 @@ export default function (sentences) {
     const { cedula } = decodeToken(token);
     const fecha_actual = new Date();
 
-    const oferta = await sentences.select("pastel", "oferta", ["*"], {
+    const oferta = await sentences.select(pasteleria, "oferta", ["*"], {
       codigo_descuento: codigo,
       fecha_fin_oferta: { [Op.gte]: fecha_actual },
       fecha_inicio_oferta: { [Op.lte]: fecha_actual },
@@ -59,7 +59,7 @@ export default function (sentences) {
       const [{ id }] = await clientes(sentences).consultarCedula({ cedula });
 
       const codigoRegistrado = await sentences.select(
-        "pastel",
+        pasteleria,
         "codigo_descuento_cliente",
         ["*"],
         {
@@ -84,7 +84,7 @@ export default function (sentences) {
       const [{ id }] = await clientes(sentences).consultarCedula({ cedula });
 
       const codigoRegistrado = await sentences.select(
-        "pastel",
+        pasteleria,
         "codigo_descuento_cliente",
         ["*"],
         {
@@ -94,7 +94,7 @@ export default function (sentences) {
       );
 
       if (codigoRegistrado.length === 0) {
-        return await sentences.insert("pastel", "codigo_descuento_cliente", {
+        return await sentences.insert(pasteleria, "codigo_descuento_cliente", {
           id_cliente: id,
           codigo_descuento: codigo,
         });
@@ -103,7 +103,7 @@ export default function (sentences) {
   }
 
   async function ofertasRegistradas() {
-    const ofertas = await sentences.select("pastel", "oferta", ["*"], {}, [
+    const ofertas = await sentences.select(pasteleria, "oferta", ["*"], {}, [
       ["fecha_inicio_oferta", "asc"],
     ]);
 
@@ -162,7 +162,7 @@ export default function (sentences) {
   async function enviarCodigoDescuento(data, token) {
     const { selectedRows, codigo_descuento } = data;
 
-    let oferta = await sentences.select("pastel", "oferta", ["*"], {
+    let oferta = await sentences.select(pasteleria, "oferta", ["*"], {
       codigo_descuento,
     });
 

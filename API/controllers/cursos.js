@@ -32,9 +32,9 @@ export default function (sentences) {
     if (data.id_cursos) {
       const id_cursos = data.id_cursos;
       delete data.id_cursos;
-      await sentences.update("pastel", "cursos", _data, { id_cursos });
+      await sentences.update(pasteleria, "cursos", _data, { id_cursos });
     } else {
-      await sentences.insert("pastel", "cursos", _data);
+      await sentences.insert(pasteleria, "cursos", _data);
     }
 
     return await auditoria(sentences).insert(
@@ -53,7 +53,7 @@ export default function (sentences) {
     const filtro = {};
     if (estado !== "all") filtro.estado_curso = estado;
 
-    const cursos = await sentences.select("pastel", "cursos", ["*"], {
+    const cursos = await sentences.select(pasteleria, "cursos", ["*"], {
       fecha_fin_curso: { [Op.gte]: fecha_actual },
       ...filtro,
     });
@@ -81,7 +81,7 @@ export default function (sentences) {
   }
 
   async function detalles({ id_cursos }) {
-    const cursos = await sentences.select("pastel", "cursos", ["*"], {
+    const cursos = await sentences.select(pasteleria, "cursos", ["*"], {
       id_cursos,
     });
 

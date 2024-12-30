@@ -139,7 +139,7 @@ export default function (sentences) {
     opcion = "actualizaciones"
   ) {
     const cliente = await sentences.select(
-      "pastel",
+      pasteleria,
       "cliente",
       ["cedula", "nombre", "apellido", "email"],
       { id_cliente }
@@ -169,7 +169,7 @@ export default function (sentences) {
 
   async function sendNotification(data, opcion) {
     const usuarios = await sentences.select(
-      "pastel",
+      pasteleria,
       "usuario",
       ["id_usuario", "id_rol", "cedula", "nombre", "apellido", "email"],
       // { id_rol: { [Op.in]: [1] } }

@@ -51,7 +51,7 @@ export default function (sentences) {
     if (estado !== "all") filtro.estado_categoria = estado;
 
     const _categoria = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "categoria",
       ["*"],
       filtro,
@@ -98,7 +98,7 @@ export default function (sentences) {
 
   async function consultarDetallesCategoria({ id_categoria }) {
     const _categoria = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "categoria",
       ["*"],
       { id_categoria },
@@ -213,12 +213,12 @@ export default function (sentences) {
       delete data.id_producto;
 
       //UPDATE
-      await sentences.update("pastel", "producto", _data, {
+      await sentences.update(pasteleria, "producto", _data, {
         id_producto,
       });
     } else {
       //INSERT
-      await sentences.insert("pastel", "producto", _data);
+      await sentences.insert(pasteleria, "producto", _data);
     }
 
     return await auditoria(sentences).insert(
@@ -259,13 +259,13 @@ export default function (sentences) {
       delete data.id_subproducto;
       delete data.id_producto;
 
-      await sentences.update("pastel", "subproducto", _data, {
+      await sentences.update(pasteleria, "subproducto", _data, {
         id_subproducto,
         id_producto,
       });
     } else {
       //INSERT
-      await sentences.insert("pastel", "subproducto", _data);
+      await sentences.insert(pasteleria, "subproducto", _data);
     }
 
     return await auditoria(sentences).insert(
@@ -308,14 +308,14 @@ export default function (sentences) {
       delete data.id_subproducto;
       delete data.id_producto;
 
-      await sentences.update("pastel", "categoria", _data, {
+      await sentences.update(pasteleria, "categoria", _data, {
         id_categoria,
         id_subproducto,
         id_producto,
       });
     } else {
       //INSERT
-      await sentences.insert("pastel", "categoria", _data);
+      await sentences.insert(pasteleria, "categoria", _data);
     }
 
     return await auditoria(sentences).insert(
@@ -331,7 +331,7 @@ export default function (sentences) {
 
   async function consultarPisosPorciones({ nombre }) {
     const datos = await sentences.select(
-      "pastel",
+      pasteleria,
       "torta",
       ["id_torta", "pisos", "porciones", "valor"],
       { descripcion: nombre }

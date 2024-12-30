@@ -66,7 +66,7 @@ export default function (sentences) {
     delete cotizacion.imagen;
     delete cotizacionFormat.imagen;
 
-    await sentences.insert("pastel", "cotizacion", {
+    await sentences.insert(pasteleria, "cotizacion", {
       id_cliente: _id_cliente,
       foto: url,
       blob_name,
@@ -111,7 +111,7 @@ export default function (sentences) {
     };
 
     await sentences.update(
-      "pastel",
+      pasteleria,
       "cotizacion",
       {
         json_cotizacion: JSON.stringify(jsonUpdate),
@@ -123,7 +123,7 @@ export default function (sentences) {
 
     if (data.estado === "A") {
       await sentences.update(
-        "pastel",
+        pasteleria,
         "cliente",
         { estado_cliente: true },
         { id_cliente: data.id_cliente }
@@ -153,7 +153,7 @@ export default function (sentences) {
     const { cedula } = decodeToken(token);
 
     let cotizaciones = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "cotizacion",
       ["json_cotizacion"],
       {},
@@ -198,7 +198,7 @@ export default function (sentences) {
     const { nombre, id_rol, cedula } = decodeToken(token);
 
     let cotizaciones = await sentences.select(
-      "pastel",
+      pasteleria,
       "cotizacion",
       ["id_cotizacion", "id_cliente", "json_cotizacion"],
       {},
@@ -267,7 +267,7 @@ export default function (sentences) {
   }
 
   async function consultarDetalles({ id }) {
-    const cotizacion = await sentences.select("pastel", "cotizacion", ["*"], {
+    const cotizacion = await sentences.select(pasteleria, "cotizacion", ["*"], {
       id_cotizacion: id,
     });
 
@@ -324,7 +324,7 @@ export default function (sentences) {
     let fieldRequired = {};
 
     const _adicionales = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "adicional",
       ["id_adicional", "nombre", "requerido", "descripcion"],
       { id_producto, estado_adicional: true },
@@ -348,7 +348,7 @@ export default function (sentences) {
       const _nombre = adicional.nombre.toLowerCase();
 
       const _adicional = await sentences.select(
-        "pastel",
+        pasteleria,
         "categoria_adicional",
         [
           ["id_categoria_adicional", "key"],
@@ -398,7 +398,7 @@ export default function (sentences) {
     let fieldRequired = {};
 
     const _subproductos = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "subproducto",
       ["id_subproducto", "nombre", "estado_subproducto"],
       { id_producto },
@@ -420,7 +420,7 @@ export default function (sentences) {
       const id_subproducto = subproducto.id_subproducto;
 
       const _categoria = await sentences.select(
-        "pastel",
+        pasteleria,
         "categoria",
         [["id_categoria", "key"], "id_categoria", "nombre", "valor"],
         { id_subproducto, id_producto },
@@ -463,7 +463,7 @@ export default function (sentences) {
     token
   ) {
     let cotizaciones = await sentences.select(
-      "pastel",
+      pasteleria,
       "cotizacion",
       ["id_cotizacion", "id_cliente", "json_cotizacion"],
       { id_cotizacion },
@@ -484,7 +484,7 @@ export default function (sentences) {
     };
 
     return await sentences.update(
-      "pastel",
+      pasteleria,
       "cotizacion",
       {
         json_cotizacion: JSON.stringify(newJsonCotizacion),

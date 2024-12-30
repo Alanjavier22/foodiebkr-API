@@ -26,7 +26,7 @@ export default function (sentences) {
       delete data.id_cliente;
 
       await sentences.update(
-        "pastel",
+        pasteleria,
         "cliente",
         { ...data, estado_cliente: data.estado },
         { id_cliente }
@@ -34,7 +34,7 @@ export default function (sentences) {
 
       await usuario(sentences).update(data);
     } else {
-      await sentences.insert("pastel", "cliente", {
+      await sentences.insert(pasteleria, "cliente", {
         ...data,
         ip_ingreso: _ip_ingreso,
         usuario_ingreso: _usuario_ingreso,
@@ -64,7 +64,7 @@ export default function (sentences) {
     if (apellido) filtro.apellido = { [Op.iLike]: `${apellido}%` };
     if (email) filtro.email = { [Op.iLike]: `${email}%` };
 
-    const clientes = await sentences.select("pastel", "cliente", ["*"], filtro);
+    const clientes = await sentences.select(pasteleria, "cliente", ["*"], filtro);
 
     for (let item of clientes) {
       const [{ id_rol = 4 } = {}] = await sentences.rawQuery(

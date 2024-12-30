@@ -14,7 +14,7 @@ export default function (sentences) {
     let { username, pass } = data;
 
     const _user = await sentences.selectJoin(
-      "pastel",
+      pasteleria,
       "usuario",
       ["*"],
       { email: username },
@@ -78,7 +78,7 @@ export default function (sentences) {
     );
 
     if (exiteUser.length === 0) {
-      await sentences.insert("pastel", "usuario", {
+      await sentences.insert(pasteleria, "usuario", {
         ...data,
         password,
         id_rol: 4,
@@ -130,7 +130,7 @@ export default function (sentences) {
 
   async function empleados() {
     return await sentences.select(
-      "pastel",
+      pasteleria,
       "usuario",
       ["id_usuario", "id_rol", "cedula", "nombre", "codigo_empleado", "email"],
       { id_rol: { [Op.in]: [1, 3] } }
@@ -139,7 +139,7 @@ export default function (sentences) {
 
   async function update(data) {
     return await sentences.update(
-      "pastel",
+      pasteleria,
       "usuario",
       {
         ...data,
