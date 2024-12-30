@@ -2,7 +2,7 @@
   "name": "apiFoodie",
   "version": "1.0.0",
   "engines": {
-    "node": "19.3.0"
+    "node": "22.11.0"
   },
   "description": "",
   "main": "index.js",
