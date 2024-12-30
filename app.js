@@ -1,4 +1,4 @@
-//Modulos
+// Modulos
 import express from "express";
 
 import { errors } from "./API/connection/error.js";
@@ -18,11 +18,11 @@ import dashboard from "./API/routes/dashboard.js";
 import email from "./API/routes/email.js";
 import paypal from "./API/routes/paypal.js";
 
-//Constantes
+// Constantes
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-//middlewares
+// Middlewares
 app.use(express.json({ limit: "500mb" }));
 app.use(
   express.urlencoded({
@@ -34,19 +34,31 @@ app.use(
 
 app.use(express.static("public"));
 
-// Configurar cabeceras y cors
+// Configurar cabeceras y CORS
 app.use((req, res, next) => {
+  // Permitir orígenes
   res.header("Access-Control-Allow-Origin", "*");
+
+  // Permitir encabezados específicos
   res.header(
     "Access-Control-Allow-Headers",
     "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"
   );
+
+  // Métodos permitidos
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
+
+  // Configuración para evitar caché
+  res.header("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", "0");
+  res.header("Surrogate-Control", "no-store");
+
   next();
 });
 
-// RUTAS
+// Rutas
 app.use("/api/producto", producto);
 app.use("/api/usuario", usuario);
 app.use("/api/cotizacion", cotizaciones);
@@ -61,8 +73,10 @@ app.use("/api/dashboard", dashboard);
 app.use("/api/auditoria", auditoria);
 app.use("/api/generarPdf", generarPdf);
 
+// Manejo de errores
 app.use(errors);
 
+// Inicializar servidor
 app.listen(PORT, () => {
   console.log(`Server on port ${PORT}`);
 });
