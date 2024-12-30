@@ -23,6 +23,14 @@ export default (name, dialect = "postgres") => {
       acquire: 60000,
       idle: 5000,
     },
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: false, // This will help you. But you will see nwe error
+        rejectUnauthorized: false // This line will fix new error
+      }
+    },
+    port: 25060
   });
   (async () => {
     try {
