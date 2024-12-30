@@ -1,7 +1,7 @@
 import express from "express";
 
 //@ts-ignore
-import clientes from "../controllers/clientes.js";
+import clientes from "../controllers/Clientes.js";
 import store from "../connection/dbposgres.js";
 import response from "../connection/response.js";
 

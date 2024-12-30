@@ -3,7 +3,7 @@ import decodeToken from "../../utils/decodeToken.js";
 import formatDate from "../../utils/formateDate.js";
 
 //Constantes
-import clientes from "./clientes.js";
+import clientes from "./Clientes.js";
 import inventario from "./inventario.js";
 import paypal from "./paypal.js";
 import auditoria from "./auditoria.js";

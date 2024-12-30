@@ -5,7 +5,7 @@ import formatDate from "../../utils/formateDate.js";
 import formatDatev2 from "../../utils/formatDatev2.js";
 
 //Constantes
-import clientes from "./clientes.js";
+import clientes from "./Clientes.js";
 import email from "./email.js";
 import auditoria from "./auditoria.js";
 

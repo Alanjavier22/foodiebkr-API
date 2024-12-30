@@ -2,7 +2,7 @@
 import decodeToken from "../../utils/decodeToken.js";
 
 //Constantes
-import clientes from "./clientes.js";
+import clientes from "./Clientes.js";
 import email from "./email.js";
 import ventas from "./ventas.js";
 import auditoria from "./auditoria.js";
