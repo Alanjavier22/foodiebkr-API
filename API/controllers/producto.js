@@ -1,4 +1,4 @@
-//Dependencias
+// Dependencias
 import decodeToken from "../../utils/decodeToken.js";
 import _fieldRequired from "../data/_fieldRequired.js";
 
@@ -51,7 +51,8 @@ export default function (sentences) {
     if (estado !== "all") filtro.estado_categoria = estado;
 
     const _categoria = await sentences.selectJoin(
-      pasteleria,
+      // Pasamos el esquema como string
+      "pasteleria",
       "categoria",
       ["*"],
       filtro,
@@ -61,19 +62,16 @@ export default function (sentences) {
           as: "id_subproducto_subproducto",
           required: true,
           select: ["nombre"],
-          // where: {},
         },
         {
           name: "producto",
           as: "id_producto_producto",
           required: true,
           select: ["nombre"],
-          // where: {},
         },
       ],
       true,
       [["id_categoria", "asc"]]
-      // [["foto", "asc"]] //Cambio para que se ordenen por valores null primero
     );
 
     const categoria = _categoria.map((item) => {
@@ -98,7 +96,7 @@ export default function (sentences) {
 
   async function consultarDetallesCategoria({ id_categoria }) {
     const _categoria = await sentences.selectJoin(
-      pasteleria,
+      "pasteleria",
       "categoria",
       ["*"],
       { id_categoria },
@@ -108,14 +106,12 @@ export default function (sentences) {
           as: "id_subproducto_subproducto",
           required: true,
           select: ["nombre"],
-          // where: {},
         },
         {
           name: "producto",
           as: "id_producto_producto",
           required: true,
           select: ["nombre"],
-          // where: {},
         },
       ],
       true
@@ -142,14 +138,15 @@ export default function (sentences) {
 
   async function consultarNombreCategoria({ nombre, id_producto }) {
     const result = [];
-
     let query = "1=1";
 
     if (id_producto !== "-") query = ` id_producto = ${id_producto}`;
 
+    // El esquema se sigue usando en el string SQL
     const categorias = await sentences.rawQuery(
       `Select id_categoria, id_producto, id_subproducto, nombre 
-        from pasteleria.categoria where nombre ilike '%${nombre}%' and ${query}`
+        from pasteleria.categoria 
+        where nombre ilike '%${nombre}%' and ${query}`
     );
 
     for (let item of categorias) {
@@ -190,14 +187,15 @@ export default function (sentences) {
 
   async function upsert(data, token) {
     const { ip_ingreso, usuario_ingreso } = decodeToken(token);
-
     const proceso = data.id_producto ? "Actualización" : "Ingreso";
 
+    // Procesar imagen
     const { url, blob_name } = await uploadImg({
       imagen: data.imagen,
       blob_name: data.blob_name,
     });
 
+    // Eliminamos el campo 'imagen' del objeto data
     delete data.imagen;
 
     let _data = {
@@ -208,19 +206,19 @@ export default function (sentences) {
       usuario_ingreso,
     };
 
+    // UPDATE o INSERT según si viene id_producto
     if (data.id_producto) {
       const id_producto = data.id_producto;
       delete data.id_producto;
 
-      //UPDATE
-      await sentences.update(pasteleria, "producto", _data, {
+      await sentences.update("pasteleria", "producto", _data, {
         id_producto,
       });
     } else {
-      //INSERT
-      await sentences.insert(pasteleria, "producto", _data);
+      await sentences.insert("pasteleria", "producto", _data);
     }
 
+    // Auditoría
     return await auditoria(sentences).insert(
       {
         seccion: "Producto",
@@ -234,7 +232,9 @@ export default function (sentences) {
 
   async function upsertSubproducto(data, token) {
     const { ip_ingreso, usuario_ingreso } = decodeToken(token);
+    const proceso = data.id_subproducto ? "Actualización" : "Ingreso";
 
+    // Procesar imagen
     const { url, blob_name } = await uploadImg({
       imagen: data.imagen,
       blob_name: data.blob_name,
@@ -250,8 +250,7 @@ export default function (sentences) {
       usuario_ingreso,
     };
 
-    const proceso = data.id_subproducto ? "Actualización" : "Ingreso";
-
+    // UPDATE o INSERT según si viene id_subproducto
     if (data.id_subproducto) {
       const id_subproducto = data.id_subproducto;
       const id_producto = data.id_producto;
@@ -259,15 +258,15 @@ export default function (sentences) {
       delete data.id_subproducto;
       delete data.id_producto;
 
-      await sentences.update(pasteleria, "subproducto", _data, {
+      await sentences.update("pasteleria", "subproducto", _data, {
         id_subproducto,
         id_producto,
       });
     } else {
-      //INSERT
-      await sentences.insert(pasteleria, "subproducto", _data);
+      await sentences.insert("pasteleria", "subproducto", _data);
     }
 
+    // Auditoría
     return await auditoria(sentences).insert(
       {
         seccion: "Subproducto",
@@ -281,7 +280,9 @@ export default function (sentences) {
 
   async function upsertCategoria(data, token) {
     const { ip_ingreso, usuario_ingreso } = decodeToken(token);
+    const proceso = data.id_categoria ? "Actualización" : "Ingreso";
 
+    // Procesar imagen
     const { url, blob_name } = await uploadImg({
       imagen: data.imagen,
       blob_name: data.blob_name,
@@ -297,8 +298,7 @@ export default function (sentences) {
       usuario_ingreso,
     };
 
-    const proceso = data.id_categoria ? "Actualización" : "Ingreso";
-
+    // UPDATE o INSERT según si viene id_categoria
     if (data.id_categoria) {
       const id_categoria = data.id_categoria;
       const id_subproducto = data.id_subproducto;
@@ -308,16 +308,16 @@ export default function (sentences) {
       delete data.id_subproducto;
       delete data.id_producto;
 
-      await sentences.update(pasteleria, "categoria", _data, {
+      await sentences.update("pasteleria", "categoria", _data, {
         id_categoria,
         id_subproducto,
         id_producto,
       });
     } else {
-      //INSERT
-      await sentences.insert(pasteleria, "categoria", _data);
+      await sentences.insert("pasteleria", "categoria", _data);
     }
 
+    // Auditoría
     return await auditoria(sentences).insert(
       {
         seccion: "Categoria",
@@ -330,8 +330,9 @@ export default function (sentences) {
   }
 
   async function consultarPisosPorciones({ nombre }) {
+    // SELECT directo, pasando "pasteleria" como string
     const datos = await sentences.select(
-      pasteleria,
+      "pasteleria",
       "torta",
       ["id_torta", "pisos", "porciones", "valor"],
       { descripcion: nombre }
@@ -357,7 +358,7 @@ export default function (sentences) {
   }
 
   return {
-    //GET
+    // GET
     consultar,
     consultarProductos,
     consultarSubproductos,
@@ -366,7 +367,7 @@ export default function (sentences) {
     consultarNombreCategoria,
     consultarOpciones,
     consultarPisosPorciones,
-    //POST
+    // POST
     upsert,
     upsertSubproducto,
     upsertCategoria,
