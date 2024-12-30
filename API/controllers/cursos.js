@@ -1,4 +1,4 @@
-//Dependencias
+// Dependencias
 import { Op } from "sequelize";
 import formatDate from "../../utils/formateDate.js";
 import formatDatev2 from "../../utils/formatDatev2.js";
@@ -6,19 +6,20 @@ import decodeToken from "../../utils/decodeToken.js";
 import { uploadImg } from "./FileController.js";
 import auditoria from "./auditoria.js";
 
-//Constantes
+// Constantes
 
 export default function (sentences) {
   async function upsert(data, token) {
     const { ip_ingreso, usuario_ingreso } = decodeToken(token);
-
     const proceso = data.id_cursos ? "Actualización" : "Ingreso";
 
+    // Cargar imagen
     const { url, blob_name } = await uploadImg({
       imagen: data.imagen,
       blob_name: data.blob_name,
     });
 
+    // Quitar 'imagen' de data
     delete data.imagen;
 
     let _data = {
@@ -32,9 +33,11 @@ export default function (sentences) {
     if (data.id_cursos) {
       const id_cursos = data.id_cursos;
       delete data.id_cursos;
-      await sentences.update(pasteleria, "cursos", _data, { id_cursos });
+
+      // Usar "pasteleria" como string
+      await sentences.update("pasteleria", "cursos", _data, { id_cursos });
     } else {
-      await sentences.insert(pasteleria, "cursos", _data);
+      await sentences.insert("pasteleria", "cursos", _data);
     }
 
     return await auditoria(sentences).insert(
@@ -53,7 +56,8 @@ export default function (sentences) {
     const filtro = {};
     if (estado !== "all") filtro.estado_curso = estado;
 
-    const cursos = await sentences.select(pasteleria, "cursos", ["*"], {
+    // Usar "pasteleria" como string
+    const cursos = await sentences.select("pasteleria", "cursos", ["*"], {
       fecha_fin_curso: { [Op.gte]: fecha_actual },
       ...filtro,
     });
@@ -81,7 +85,8 @@ export default function (sentences) {
   }
 
   async function detalles({ id_cursos }) {
-    const cursos = await sentences.select(pasteleria, "cursos", ["*"], {
+    // Usar "pasteleria" como string
+    const cursos = await sentences.select("pasteleria", "cursos", ["*"], {
       id_cursos,
     });
 
@@ -101,10 +106,10 @@ export default function (sentences) {
   }
 
   return {
-    //GET
+    // GET
     consultar,
     detalles,
-    //POST
+    // POST
     upsert,
   };
 }
