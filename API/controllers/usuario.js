@@ -74,7 +74,7 @@ export default function (sentences) {
     delete data.pass;
 
     const exiteUser = await sentences.rawQuery(
-      `Select * from pastel.usuario where cedula = '${data.cedula}' or email = '${data.email}'`
+      `Select * from pasteleria.usuario where cedula = '${data.cedula}' or email = '${data.email}'`
     );
 
     if (exiteUser.length === 0) {
@@ -99,7 +99,7 @@ export default function (sentences) {
 
   async function recovery(data) {
     const exiteUser = await sentences.rawQuery(
-      `Select * from pastel.usuario where email = '${data.email}'`
+      `Select * from pasteleria.usuario where email = '${data.email}'`
     );
 
     if (exiteUser.length !== 0) {
@@ -113,7 +113,7 @@ export default function (sentences) {
     const password = await bcryptjs.hash(data.newPass, 10);
 
     const exiteUser = await sentences.rawQuery(
-      `Select * from pastel.usuario where id_usuario = ${data.id_usuario}`
+      `Select * from pasteleria.usuario where id_usuario = ${data.id_usuario}`
     );
 
     if (exiteUser.length !== 0) {

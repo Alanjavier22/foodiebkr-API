@@ -300,7 +300,7 @@ export default function (sentences) {
 
   async function jsonCotizacion(id_cotizacion) {
     const [{ json_cotizacion } = {}] = await sentences.rawQuery(
-      `Select json_cotizacion from pastel.cotizacion where id_cotizacion = ${id_cotizacion}`
+      `Select json_cotizacion from pasteleria.cotizacion where id_cotizacion = ${id_cotizacion}`
     );
 
     return JSON.parse(json_cotizacion);
@@ -309,8 +309,8 @@ export default function (sentences) {
   async function consultaCamposRequeridos({ id_producto }) {
     let adicionales = await sentences.rawQuery(`
       select a.nombre, a.id_adicional as key 
-      from pastel.adicional a
-      inner join pastel.producto p
+      from pasteleria.adicional a
+      inner join pasteleria.producto p
         on p.id_producto = a.id_producto
       where a.id_producto = ${id_producto}
       order by a.nombre asc

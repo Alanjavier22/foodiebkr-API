@@ -54,7 +54,7 @@ export default function (sentences) {
 
     return await sentences.rawQuery(
       `Select id_producto, nombre, foto as imagen, blob_name, estado_producto  
-          from pastel.producto 
+          from pasteleria.producto 
           where ${query} and es_inventario = true
         order by id_producto asc`
     );
@@ -65,7 +65,7 @@ export default function (sentences) {
 
     return await sentences.rawQuery(
       `Select id_subproducto, id_producto, nombre, foto as imagen, blob_name, estado_subproducto  
-          from pastel.subproducto 
+          from pasteleria.subproducto 
           where id_producto = ${Number(id_producto)} and ${query}
           order by id_subproducto asc`
     );

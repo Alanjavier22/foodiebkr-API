@@ -42,7 +42,7 @@ export default function (sentences) {
     }
 
     return await sentences.rawQuery(
-      `Select id_cliente from pastel.cliente where cedula = '${data.cedula}'`
+      `Select id_cliente from pasteleria.cliente where cedula = '${data.cedula}'`
     );
   }
 
@@ -68,7 +68,7 @@ export default function (sentences) {
 
     for (let item of clientes) {
       const [{ id_rol = 4 } = {}] = await sentences.rawQuery(
-        `Select id_rol from pastel.usuario where cedula = '${item.cedula}'`
+        `Select id_rol from pasteleria.usuario where cedula = '${item.cedula}'`
       );
 
       result.push({
@@ -92,13 +92,13 @@ export default function (sentences) {
   async function consultarCedula({ cedula }) {
     return await sentences.rawQuery(
       `Select id_cliente as _id_cliente, estado_cliente as estado, id_cliente as id, *
-        from pastel.cliente where cedula = '${cedula}'`
+        from pasteleria.cliente where cedula = '${cedula}'`
     );
   }
 
   async function consultarID(data) {
     return await sentences.rawQuery(
-      `Select * from pastel.cliente where id_cliente = ${data.id_cliente}`
+      `Select * from pasteleria.cliente where id_cliente = ${data.id_cliente}`
     );
   }
 

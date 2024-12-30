@@ -12,7 +12,7 @@ export default function (sentences) {
 
     return await sentences.rawQuery(
       `Select id_producto, nombre, ${query}, estado_producto 
-        from pastel.producto order by id_producto asc`
+        from pasteleria.producto order by id_producto asc`
     );
   }
 
@@ -21,7 +21,7 @@ export default function (sentences) {
 
     return await sentences.rawQuery(
       `Select id_producto, nombre, foto as imagen, blob_name, estado_producto  
-          from pastel.producto 
+          from pasteleria.producto 
           where ${query} and es_inventario = false
         order by id_producto asc`
     );
@@ -32,7 +32,7 @@ export default function (sentences) {
 
     return await sentences.rawQuery(
       `Select id_subproducto, id_producto, nombre, foto as imagen, blob_name, estado_subproducto  
-          from pastel.subproducto 
+          from pasteleria.subproducto 
           where id_producto = ${Number(id_producto)} and ${query}
           order by id_subproducto asc`
     );
@@ -149,7 +149,7 @@ export default function (sentences) {
 
     const categorias = await sentences.rawQuery(
       `Select id_categoria, id_producto, id_subproducto, nombre 
-        from pastel.categoria where nombre ilike '%${nombre}%' and ${query}`
+        from pasteleria.categoria where nombre ilike '%${nombre}%' and ${query}`
     );
 
     for (let item of categorias) {

@@ -203,7 +203,7 @@ export default function (sentences) {
 
     return await sentences.rawQuery(`
         SELECT id_venta
-        FROM pastel.venta,
+        FROM pasteleria.venta,
             jsonb_array_elements(json_venta::jsonb) AS cot
         WHERE cot->>'id_cotizacion' = '${id_cotizacion}' and realizado_por = 'Cotizacion';
       `);

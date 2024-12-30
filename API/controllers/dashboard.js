@@ -51,9 +51,9 @@ export default function (sentences) {
         c.email,
         SUM(v.valor) AS valor
       FROM
-        pastel.cliente c
+        pasteleria.cliente c
       JOIN
-        pastel.venta v ON c.id_cliente = v.id_cliente
+        pasteleria.venta v ON c.id_cliente = v.id_cliente
       GROUP BY
         c.id_cliente, nombre_completo, c.telefono, c.email
       ORDER BY valor DESC
@@ -75,8 +75,8 @@ export default function (sentences) {
       SELECT 
         v.id_cliente, sum(v.valor) as valor, 
         CONCAT(cl.nombre, ' ', cl.apellido) AS nombre_completo
-      FROM pastel.venta v
-      inner join pastel.cliente cl
+      FROM pasteleria.venta v
+      inner join pasteleria.cliente cl
         on cl.id_cliente = v.id_cliente
       where v.realizado_por = 'Cotizacion'
       group by v.id_cliente, nombre_completo
@@ -96,7 +96,7 @@ export default function (sentences) {
   async function masCotizado() {
     const cotizaciones = await sentences.rawQuery(`
       SELECT json_cotizacion
-      FROM pastel.cotizacion;
+      FROM pasteleria.cotizacion;
     `);
 
     const contarProductosCotizados = (cotizaciones) => {
@@ -139,7 +139,7 @@ export default function (sentences) {
       SELECT 
         TO_CHAR(fecha, 'Month YYYY') AS mes,
         COUNT(*) AS total_cotizaciones
-      FROM pastel.cotizacion
+      FROM pasteleria.cotizacion
       GROUP BY TO_CHAR(fecha, 'Month YYYY')
       ORDER BY MIN(fecha) DESC;
     `;
@@ -163,7 +163,7 @@ export default function (sentences) {
       SELECT 
         TO_CHAR(DATE_TRUNC('week', fecha), 'YYYY-MM-DD') AS semana,
         COUNT(*) AS total_cotizaciones
-      FROM pastel.cotizacion
+      FROM pasteleria.cotizacion
       GROUP BY semana
       ORDER BY semana DESC;
     `;
@@ -187,7 +187,7 @@ export default function (sentences) {
   async function productosMasVendido() {
     const ventas = await sentences.rawQuery(`
       SELECT json_venta, valor
-      FROM pastel.venta
+      FROM pasteleria.venta
       WHERE realizado_por = 'Tienda'
     `);
 
@@ -239,7 +239,7 @@ export default function (sentences) {
       SELECT 
         TO_CHAR(fecha, 'YYYY-MM') AS mes,
         SUM(valor) AS total_ventas
-      FROM pastel.venta
+      FROM pasteleria.venta
       GROUP BY TO_CHAR(fecha, 'YYYY-MM')
       ORDER BY TO_DATE(TO_CHAR(fecha, 'YYYY-MM'), 'YYYY-MM') DESC;
     `;
@@ -269,7 +269,7 @@ export default function (sentences) {
       SELECT 
         TO_CHAR(DATE_TRUNC('week', fecha), 'YYYY-MM-DD') AS semana,
         SUM(valor) AS total_ventas
-      FROM pastel.venta
+      FROM pasteleria.venta
       GROUP BY semana
       ORDER BY semana DESC;
     `;
@@ -295,7 +295,7 @@ export default function (sentences) {
       SELECT 
         TO_CHAR(fecha, 'YYYY-MM-DD') AS dia,
         SUM(valor) AS total_ventas
-      FROM pastel.venta
+      FROM pasteleria.venta
       GROUP BY dia
       ORDER BY dia DESC;
     `;
@@ -314,7 +314,7 @@ export default function (sentences) {
     const query = await sentences.rawQuery(`
       SELECT 
         SUM(valor) as total_ventas
-      FROM pastel.venta
+      FROM pasteleria.venta
     `);
 
     return query[0];
@@ -324,7 +324,7 @@ export default function (sentences) {
     const query = await sentences.rawQuery(`
       SELECT 
         SUM(valor) as total_ventas
-      FROM pastel.venta
+      FROM pasteleria.venta
       WHERE DATE(fecha) = CURRENT_DATE
     `);
 

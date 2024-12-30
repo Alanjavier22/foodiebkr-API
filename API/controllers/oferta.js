@@ -128,9 +128,9 @@ export default function (sentences) {
         c.email,
         SUM(v.valor) AS precio_estimado
       FROM
-          pastel.cliente c
+          pasteleria.cliente c
       JOIN
-          pastel.venta v ON c.id_cliente = v.id_cliente
+          pasteleria.venta v ON c.id_cliente = v.id_cliente
       GROUP BY
           c.id_cliente, nombre_completo, c.telefono, c.email
       ORDER BY precio_estimado DESC;
@@ -145,7 +145,7 @@ export default function (sentences) {
           email,
           fecha
       FROM
-          pastel.cliente
+          pasteleria.cliente
       ORDER BY
           fecha DESC
       LIMIT 10;
