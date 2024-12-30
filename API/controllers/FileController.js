@@ -3,7 +3,6 @@ import containerClient from "../connection/azure.js";
 async function uploadImg({ imagen, blob_name }) {
   try {
     if (!imagen) {
-      // throw new Error("No image provided");
       return { imagen, blob_name };
     }
 
@@ -18,8 +17,8 @@ async function uploadImg({ imagen, blob_name }) {
     }
 
     // Generar un nuevo nombre de blob
-    const newblob_name = `img-${Date.now().toString()}`;
-    const blockBlobClient = containerClient.getBlockBlobClient(newblob_name);
+    const newBlobName = `img-${Date.now().toString()}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(newBlobName);
 
     // Convertir el string Base64 a un Buffer
     const buffer = Buffer.from(imagen.split(",")[1], "base64");
@@ -32,14 +31,14 @@ async function uploadImg({ imagen, blob_name }) {
 
     // Subir el blob
     await blockBlobClient.uploadData(buffer, {
-      blobHTTPHeaders: { blobContentType: contentType || "image/jpeg" }, // Ajustar el tipo de contenido si es necesario
+      blobHTTPHeaders: { blobContentType: contentType || "image/jpeg" },
     });
 
     const url = blockBlobClient.url;
-    return { url, blob_name: newblob_name };
+    return { url, blob_name: newBlobName };
   } catch (error) {
-    console.error("Error uploading image to Azure Blob Storage:", error);
-    throw error; // Re-lanzar el error después de registrarlo
+    console.error("Error uploading image to Azure Blob Storage:", error.message);
+    throw error;
   }
 }
 
