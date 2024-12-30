@@ -31,7 +31,7 @@ export default class codigo_descuento_cliente extends Model {
   }, {
     sequelize,
     tableName: 'codigo_descuento_cliente',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

@@ -68,7 +68,7 @@ export default class cursos extends Model {
   }, {
     sequelize,
     tableName: 'cursos',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

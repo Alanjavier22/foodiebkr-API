@@ -55,7 +55,7 @@ export default class cotizacion extends Model {
   }, {
     sequelize,
     tableName: 'cotizacion',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

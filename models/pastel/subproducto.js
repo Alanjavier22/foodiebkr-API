@@ -52,7 +52,7 @@ export default class subproducto extends Model {
   }, {
     sequelize,
     tableName: 'subproducto',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

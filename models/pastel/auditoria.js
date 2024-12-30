@@ -31,7 +31,7 @@ export default class auditoria extends Model {
   }, {
     sequelize,
     tableName: 'auditoria',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

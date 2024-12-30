@@ -68,7 +68,7 @@ export default class categoria extends Model {
   }, {
     sequelize,
     tableName: 'categoria',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

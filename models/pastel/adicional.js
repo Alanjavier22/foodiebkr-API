@@ -53,7 +53,7 @@ export default class adicional extends Model {
   }, {
     sequelize,
     tableName: 'adicional',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

@@ -57,7 +57,7 @@ export default class cliente extends Model {
   }, {
     sequelize,
     tableName: 'cliente',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

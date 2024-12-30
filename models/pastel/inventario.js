@@ -72,7 +72,7 @@ export default class inventario extends Model {
   }, {
     sequelize,
     tableName: 'inventario',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

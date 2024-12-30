@@ -51,7 +51,7 @@ export default class torta extends Model {
   }, {
     sequelize,
     tableName: 'torta',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

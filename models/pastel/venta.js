@@ -56,7 +56,7 @@ export default class venta extends Model {
   }, {
     sequelize,
     tableName: 'venta',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

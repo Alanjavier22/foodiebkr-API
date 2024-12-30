@@ -49,7 +49,7 @@ export default class producto extends Model {
   }, {
     sequelize,
     tableName: 'producto',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

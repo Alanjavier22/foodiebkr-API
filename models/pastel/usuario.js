@@ -59,7 +59,7 @@ export default class usuario extends Model {
   }, {
     sequelize,
     tableName: 'usuario',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

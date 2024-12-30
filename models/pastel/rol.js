@@ -31,7 +31,7 @@ export default class rol extends Model {
   }, {
     sequelize,
     tableName: 'rol',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

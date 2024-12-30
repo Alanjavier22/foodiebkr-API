@@ -60,7 +60,7 @@ export default class categoria_adicional extends Model {
   }, {
     sequelize,
     tableName: 'categoria_adicional',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {

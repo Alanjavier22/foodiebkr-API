@@ -48,7 +48,7 @@ export default class oferta extends Model {
   }, {
     sequelize,
     tableName: 'oferta',
-    schema: 'pastel',
+    schema: 'pasteleria',
     timestamps: false,
     indexes: [
       {
