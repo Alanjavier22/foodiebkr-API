@@ -58,13 +58,15 @@ export default function store(name) {
     }
   }
 
-  async function select(schema, model, select = [], filtros = {}, order = []) {
+  async function select(schema, model, select = [], filtros = {}, order = [], limit = null, offset = null) {
     try {
       const Models = await getSchema(schema);
       const config = {
         attributes: select.length > 0 ? select : undefined,
         where: Object.keys(filtros).length > 0 ? filtros : undefined,
         order,
+        limit: limit !== null ? limit : undefined,
+        offset: offset !== null ? offset : undefined,
         raw: true,
       };
       return await Models[model].findAll(config);
@@ -81,7 +83,9 @@ export default function store(name) {
     joinTables = [],
     raw = false,
     order = [],
-    group = []
+    group = [],
+    limit = null,
+    offset = null
   ) {
     try {
       const Models = await getSchema(schema);
@@ -116,6 +120,8 @@ export default function store(name) {
         raw,
         order,
         group,
+        limit: limit !== null ? limit : undefined,
+        offset: offset !== null ? offset : undefined,
       };
 
       return await Models[model].findAll(config);
@@ -124,11 +130,16 @@ export default function store(name) {
     }
   }
 
+  async function getTransaction() {
+    return await sequelize.transaction();
+  }
+
   return {
     insert,
     update,
     select,
     selectJoin,
     rawQuery,
+    getTransaction,
   };
 }

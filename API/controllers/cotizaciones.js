@@ -33,14 +33,18 @@ export default function (sentences) {
       delete cliente.estado_cliente;
     }
 
-    const [{ id_cliente = null } = {}] = await _clientes.upsert(
-      cliente,
-      "",
-      clientIp
-    );
-    _id_cliente = id_cliente;
+    const t = await sentences.getTransaction();
+    
+    try {
+      const [{ id_cliente = null } = {}] = await _clientes.upsert(
+        cliente,
+        "",
+        clientIp,
+        { transaction: t }
+      );
+      _id_cliente = id_cliente;
 
-    let cotizacionFormat = null;
+      let cotizacionFormat = null;
 
     if (Number(cotizacion.id_producto) === 5) {
       const { opciones = {} } = cotizacion;
@@ -66,7 +70,7 @@ export default function (sentences) {
     delete cotizacion.imagen;
     delete cotizacionFormat.imagen;
 
-    await sentences.insert(pasteleria, "cotizacion", {
+    await sentences.insert("pasteleria", "cotizacion", {
       id_cliente: _id_cliente,
       foto: url,
       blob_name,
@@ -74,7 +78,7 @@ export default function (sentences) {
       json_cotizacion: JSON.stringify(cotizacionFormat),
       estado_cotizacion: "Nt",
       ip_ingreso: clientIp,
-    });
+    }, { transaction: t });
 
     await email(sentences).sendNotification(data, "cotizacion");
 
@@ -83,8 +87,14 @@ export default function (sentences) {
       _id_cliente,
       "insert"
     );
-
+    
+    await t.commit();
     return [1];
+    
+    } catch (err) {
+      await t.rollback();
+      throw err;
+    }
   }
 
   async function actualizar(data, token) {
@@ -111,7 +121,7 @@ export default function (sentences) {
     };
 
     await sentences.update(
-      pasteleria,
+      "pasteleria",
       "cotizacion",
       {
         json_cotizacion: JSON.stringify(jsonUpdate),
@@ -123,7 +133,7 @@ export default function (sentences) {
 
     if (data.estado === "A") {
       await sentences.update(
-        pasteleria,
+        "pasteleria",
         "cliente",
         { estado_cliente: true },
         { id_cliente: data.id_cliente }
@@ -300,7 +310,8 @@ export default function (sentences) {
 
   async function jsonCotizacion(id_cotizacion) {
     const [{ json_cotizacion } = {}] = await sentences.rawQuery(
-      `Select json_cotizacion from pasteleria.cotizacion where id_cotizacion = ${id_cotizacion}`
+      `Select json_cotizacion from pasteleria.cotizacion where id_cotizacion = :id_cotizacion`,
+      { id_cotizacion }
     );
 
     return JSON.parse(json_cotizacion);
@@ -312,9 +323,9 @@ export default function (sentences) {
       from pasteleria.adicional a
       inner join pasteleria.producto p
         on p.id_producto = a.id_producto
-      where a.id_producto = ${id_producto}
+      where a.id_producto = :id_producto
       order by a.nombre asc
-    `);
+    `, { id_producto });
 
     return adicionales.map((item) => item.nombre);
   }

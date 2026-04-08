@@ -10,8 +10,13 @@ export default function decodeToken(token) {
   if (token.toLowerCase().includes("bearer ")) {
     token = token.split(" ")[1];
   }
-  let decoded = jwt.decode(token);
-  // console.log(decoded);
+  let decoded;
+  try {
+    const key = process.env.SECRET_KEY || "fallback_secret";
+    decoded = jwt.verify(token, key);
+  } catch (err) {
+    throw error("Token no valido o expirado", 401);
+  }
   if (!decoded) {
     throw error("Token no valido", 401);
   }

@@ -21,13 +21,6 @@ export default function (sentences) {
       //console.time("creatingPDF"); //INFO: Se comenta, ya que no tiene uso
       const printer = new PdfPrinter(fonts);
 
-
-        let ruta = path.join(__dirname + `/assets/prueba.pdf`);
-        let pdfDoc = printer.createPdfKitDocument(docDefinition, {});
-        pdfDoc.pipe(fs.createWriteStream(ruta));
-        pdfDoc.end();
-      
-
       //Proceso para retorno como base64
       let pdf = printer.createPdfKitDocument(docDefinition);
       let stream = pdf.pipe(new Base64Encode());

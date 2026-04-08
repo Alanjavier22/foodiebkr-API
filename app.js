@@ -1,5 +1,8 @@
 // Modulos
 import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 import { errors } from "./API/connection/error.js";
 
@@ -12,6 +15,8 @@ import inventario from "./API/routes/inventario.js";
 import oferta from "./API/routes/oferta.js";
 import cursos from "./API/routes/cursos.js";
 
+import { authMiddleware } from "./API/middlewares/authMiddleware.js";
+
 import generarPdf from "./API/routes/pdf.js";
 import auditoria from "./API/routes/auditoria.js";
 import dashboard from "./API/routes/dashboard.js";
@@ -23,10 +28,10 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Middlewares
-app.use(express.json({ limit: "500mb" }));
+app.use(express.json({ limit: "50mb" }));
 app.use(
   express.urlencoded({
-    limit: "500mb",
+    limit: "50mb",
     extended: true,
     parameterLimit: 50000,
   })
@@ -35,26 +40,22 @@ app.use(
 app.use(express.static("public"));
 
 // Configurar cabeceras y CORS
+app.use(helmet());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+
+app.use(cors());
 app.use((req, res, next) => {
-  // Permitir orígenes
-  res.header("Access-Control-Allow-Origin", "*");
-
-  // Permitir encabezados específicos
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"
-  );
-
-  // Métodos permitidos
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
-
   // Configuración para evitar caché
   res.header("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
   res.header("Pragma", "no-cache");
   res.header("Expires", "0");
   res.header("Surrogate-Control", "no-store");
-
   next();
 });
 
@@ -63,8 +64,8 @@ app.use("/api/producto", producto);
 app.use("/api/usuario", usuario);
 app.use("/api/cotizacion", cotizaciones);
 app.use("/api/cliente", clientes);
-app.use("/api/ventas", ventas);
-app.use("/api/inventario", inventario);
+app.use("/api/ventas", authMiddleware, ventas);
+app.use("/api/inventario", authMiddleware, inventario);
 app.use("/api/oferta", oferta);
 app.use("/api/cursos", cursos);
 app.use("/api/email", email);

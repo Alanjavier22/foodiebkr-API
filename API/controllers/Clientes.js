@@ -6,7 +6,7 @@ import formatDate from "../../utils/formateDate.js";
 import usuario from "./usuario.js";
 
 export default function (sentences) {
-  async function upsert(data, token, ipClient) {
+  async function upsert(data, token, ipClient, transaction = {}) {
     let _ip_ingreso, _usuario_ingreso;
 
     if (!ipClient) {
@@ -26,23 +26,25 @@ export default function (sentences) {
       delete data.id_cliente;
 
       await sentences.update(
-        pasteleria,
+        "pasteleria",
         "cliente",
         { ...data, estado_cliente: data.estado },
-        { id_cliente }
+        { id_cliente },
+        transaction
       );
 
       await usuario(sentences).update(data);
     } else {
-      await sentences.insert(pasteleria, "cliente", {
+      await sentences.insert("pasteleria", "cliente", {
         ...data,
         ip_ingreso: _ip_ingreso,
         usuario_ingreso: _usuario_ingreso,
-      });
+      }, transaction);
     }
 
     return await sentences.rawQuery(
-      `Select id_cliente from pasteleria.cliente where cedula = '${data.cedula}'`
+      `Select id_cliente from pasteleria.cliente where cedula = :cedula`,
+      { cedula: data.cedula }
     );
   }
 
@@ -68,7 +70,8 @@ export default function (sentences) {
 
     for (let item of clientes) {
       const [{ id_rol = 4 } = {}] = await sentences.rawQuery(
-        `Select id_rol from pasteleria.usuario where cedula = '${item.cedula}'`
+        `Select id_rol from pasteleria.usuario where cedula = :cedula`,
+        { cedula: item.cedula }
       );
 
       result.push({
@@ -92,13 +95,15 @@ export default function (sentences) {
   async function consultarCedula({ cedula }) {
     return await sentences.rawQuery(
       `Select id_cliente as _id_cliente, estado_cliente as estado, id_cliente as id, *
-        from pasteleria.cliente where cedula = '${cedula}'`
+        from pasteleria.cliente where cedula = :cedula`, 
+      { cedula }
     );
   }
 
   async function consultarID(data) {
     return await sentences.rawQuery(
-      `Select * from pasteleria.cliente where id_cliente = ${data.id_cliente}`
+      `Select * from pasteleria.cliente where id_cliente = :id_cliente`,
+      { id_cliente: data.id_cliente }
     );
   }
 

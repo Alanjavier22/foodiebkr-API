@@ -1,4 +1,5 @@
 import containerClient from "../connection/azure.js";
+import crypto from "crypto";
 
 async function uploadImg({ imagen, blob_name }) {
   try {
@@ -17,7 +18,7 @@ async function uploadImg({ imagen, blob_name }) {
     }
 
     // Generar un nuevo nombre de blob
-    const newBlobName = `img-${Date.now().toString()}`;
+    const newBlobName = `img-${crypto.randomUUID()}`;
     const blockBlobClient = containerClient.getBlockBlobClient(newBlobName);
 
     // Convertir el string Base64 a un Buffer
